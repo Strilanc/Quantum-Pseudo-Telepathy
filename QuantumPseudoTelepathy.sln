@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantumPseudoTelepathy", "QuantumPseudoTelepathy\QuantumPseudoTelepathy.csproj", "{DBDC2B1D-95DB-4F55-9B11-1F474D2CCC17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuantumPseudoTelepathyTest", "QuantumPseudoTelepathyTest\QuantumPseudoTelepathyTest.csproj", "{9168A828-3B2A-49C8-9610-0FEF1065B469}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DBDC2B1D-95DB-4F55-9B11-1F474D2CCC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBDC2B1D-95DB-4F55-9B11-1F474D2CCC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBDC2B1D-95DB-4F55-9B11-1F474D2CCC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBDC2B1D-95DB-4F55-9B11-1F474D2CCC17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9168A828-3B2A-49C8-9610-0FEF1065B469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9168A828-3B2A-49C8-9610-0FEF1065B469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9168A828-3B2A-49C8-9610-0FEF1065B469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9168A828-3B2A-49C8-9610-0FEF1065B469}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
