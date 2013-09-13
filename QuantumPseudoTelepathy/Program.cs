@@ -5,10 +5,17 @@ using Strilanc.LinqToCollections;
 
 public static class Program {
     public static void Main() {
+        var a1 = Util.FindCircuitsIsomorphicTo(Util.Alice1).First();
+        var a2 = Util.FindCircuitsIsomorphicTo(Util.Alice2).First();
+        var a3 = Util.FindCircuitsIsomorphicTo(Util.Alice3).First();
+        var b1 = Util.FindCircuitsIsomorphicTo(Util.Bob1).First();
+        var b2 = Util.FindCircuitsIsomorphicTo(Util.Bob2).First();
+        var b3 = Util.FindCircuitsIsomorphicTo(Util.Bob3).First();
         RunTest();
     }
 
     public static void RunTest() {
+
         var As = new[] { Util.Alice1, Util.Alice2, Util.Alice3 };
         var Bs = new[] { Util.Bob1, Util.Bob2, Util.Bob3 };
         if (As.Concat(Bs).Any(e => !e.IsUnitary())) throw new Exception();

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Numerics;
 
 public static class Util {
-    public static readonly Complex i = Complex.ImaginaryOne;
+    private static readonly Complex i = Complex.ImaginaryOne;
     public static readonly ComplexMatrix I = ComplexMatrix.MakeIdentity(2);
     public static readonly ComplexMatrix H = ComplexMatrix.MakeUnitaryHadamard(1);
     public static readonly ComplexMatrix X = ComplexMatrix.FromCellData(0, 1, 1, 0);
@@ -127,8 +127,11 @@ public static class Util {
     public static string ToMagPhaseString(this Complex c, string af = null, string pf = null) {
         return string.Format("√{0} ⋅ ∠{1}°", (c.Magnitude*c.Magnitude).ToString(af ?? "0.##"), (c.Phase*180/Math.PI).ToString(pf ?? "0.#"));
     }
+    public static KeyValuePair<TKey, TVal> KeyVal<TKey, TVal>(this TKey key, TVal val) {
+        return new KeyValuePair<TKey, TVal>(key, val);
+    } 
 
-    public static IEnumerable<KeyValuePair<string, ComplexMatrix>> GateSearch() {
+    private static readonly KeyValuePair<string, ComplexMatrix>[] BasicGatesToSearch = new Func<KeyValuePair<string, ComplexMatrix>[]>(() => {
         var singleWireBasicGates = new Dictionary<string, ComplexMatrix> {
             {"H", H},
             {"X", X},
@@ -137,7 +140,14 @@ public static class Util {
             {"Phase", Phase},
             {"SqrtNot", SqrtNot},
             {"BeamSplit", BeamSplit}
-        }; var twoWireBasicGates = new Dictionary<string, ComplexMatrix> {
+        };
+        var eitherWireGates = from singleWireGate in singleWireBasicGates
+                              from gateOnOneOfTwoWires in new[] {
+                                  (singleWireGate.Key + ".TensorProduct(I)").KeyVal(singleWireGate.Value.TensorProduct(I)),
+                                  ("I.TensorProduct(" + singleWireGate.Key + ")").KeyVal(I.TensorProduct(singleWireGate.Value))
+                              }
+                              select gateOnOneOfTwoWires;
+        var twoWireBasicGates = new Dictionary<string, ComplexMatrix> {
             {"ControlledNot", ControlledNot},
             {"ControlledNot2", ControlledNot2},
             {"Swap", Swap},
@@ -155,26 +165,29 @@ public static class Util {
             {"phase10i.Dagger()", Phase10.Dagger()},
             {"Phase11.Dagger()", Phase11.Dagger()}
         };
-        var eitherWireGates = from g1 in singleWireBasicGates
-                              from g2 in new[] {
-                                  new KeyValuePair<string, ComplexMatrix>(g1.Key + ".TensorProduct(I)", g1.Value.TensorProduct(I)),
-                                  new KeyValuePair<string, ComplexMatrix>("I.TensorProduct(" + g1.Key + ")", I.TensorProduct(g1.Value))
-                              }
-                              select g2;
-        var basicGates = eitherWireGates.Concat(twoWireBasicGates).ToArray();
 
-        var h = new HashSet<ComplexMatrix> {I};
-        foreach (var g in basicGates) {
-            h.Add(g.Value);
-            yield return g;
+        return eitherWireGates.Concat(twoWireBasicGates).ToArray();
+    }).Invoke();
+
+    public static IEnumerable<KeyValuePair<string, ComplexMatrix>> CircuitSearch() {
+        var seen = new HashSet<ComplexMatrix> {I};
+        foreach (var head in BasicGatesToSearch) {
+            seen.Add(head.Value);
+            yield return head;
         }
-        foreach (var g2 in GateSearch()) {
-            foreach (var g in basicGates) {
-                var f = g2.Value * g.Value;
-                if (h.Add(f)) {
-                    yield return new KeyValuePair<string, ComplexMatrix>(g2.Key + " * " + g.Key, f);
+        foreach (var head in CircuitSearch()) {
+            foreach (var nextGate in BasicGatesToSearch) {
+                var f = head.Value * nextGate.Value;
+                if (seen.Add(f)) {
+                    yield return new KeyValuePair<string, ComplexMatrix>(head.Key + " * " + nextGate.Key, f);
                 }
             }
         }
+    }
+
+    public static IEnumerable<string> FindCircuitsIsomorphicTo(ComplexMatrix target) {
+        return from circuit in CircuitSearch()
+               where circuit.Value.IsPhased(target)
+               select circuit.Key;
     }
 }

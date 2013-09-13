@@ -99,8 +99,14 @@ public struct ComplexMatrix {
         }
     }
     public bool IsPhased(ComplexMatrix other) {
-        var c = other.Columns.First().First()/this.Columns.First().First();
-        return (this * c) == other;
+        var self = this;
+        return (from c in self.Span.Range()
+                from r in self.Span.Range()
+                let v = self.Columns[c][r]
+                where v != 0
+                let ov = other.Columns[c][r]
+                select self*(ov/v) == other
+                ).FirstOrDefault();
     }
     public bool IsSuperSimple() {
         return Columns.Select((e, i) => (e[i].Magnitude - 1).Abs() < 0.00001).All(e => e);
