@@ -60,20 +60,19 @@ public static class Util {
     public static readonly ComplexMatrix Flip10 = Phase10 * Phase10;
     public static readonly ComplexMatrix Flip11 = Phase11 * Phase11;
 
-    public static readonly ComplexMatrix Alice1 = Z.TensorSquare()
+    public static readonly ComplexMatrix Alice1 = Y.TensorSquare()
                                                 * PlusOne
                                                 * Swap
                                                 * BeamSplit.TensorProduct(I)
                                                 * ControlledNot
                                                 * Phase01.Dagger();
 
-    public static readonly ComplexMatrix Alice2 = Z.TensorSquare()
-                                                * Phase00
+    public static readonly ComplexMatrix Alice2 = Phase00
                                                 * Phase11
-                                                * I.TensorProduct(X)
+                                                * Y.TensorProduct(Z)
                                                 * H.TensorSquare();
 
-    public static readonly ComplexMatrix Alice3 = I.TensorProduct(Z)
+    public static readonly ComplexMatrix Alice3 = X.TensorProduct(Y)
                                                 * I.TensorProduct(H)
                                                 * PlusOne
                                                 * I.TensorProduct(SqrtNot);

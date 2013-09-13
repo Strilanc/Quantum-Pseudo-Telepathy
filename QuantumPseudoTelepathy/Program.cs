@@ -44,12 +44,6 @@ public static class Program {
         return worldSuperposition*circuitInWorld;
     }
 
-    public static int WireStatesToIndex(WorldState wires) {
-        return (wires.Alice.Wire1 ? (1 << 3) : 0)
-             | (wires.Alice.Wire2 ? (1 << 2) : 0)
-             | (wires.Bob.Wire1 ? (1 << 1) : 0)
-             | (wires.Bob.Wire2 ? (1 << 0) : 0);
-    }
     public static WorldState IndexToWireStates(this int index) {
         return new WorldState(
             new AliceState(
@@ -61,23 +55,16 @@ public static class Program {
     }
 
     public static ComplexVector PreSharedQubitsSuperposition() {
-        // first two bits are for alice, second two for bob
-        // their respective bits are entangled to have opposite values
-        var states = new[] {
-            new WorldState(
-                new AliceState(wire1: false, wire2: false),
-                new BobState(wire1: true, wire2: true)),
-            new WorldState(
-                new AliceState(wire1: false, wire2: true),
-                new BobState(wire1: true, wire2: false)),
-            new WorldState(
-                new AliceState(wire1: true, wire2: false),
-                new BobState(wire1: false, wire2: true)),
-            new WorldState(
-                new AliceState(wire1: true, wire2: true),
-                new BobState(wire1: false, wire2: false)),
-        };
+        // Alice and Bob each get two entangled bits
+        // Alice's qubit #1 is entangled such that it will always agree with Bob's qubit #1
+        // Same deal for qubits #2
+        var states = from bit1 in new[] {false, true}
+                     from bit2 in new[] {false, true}
+                     select new WorldState(
+                         new AliceState(wire1: bit1, wire2: bit2),
+                         new BobState(wire1: bit1, wire2: bit2));
 
+        // convert our nice list of states into a superposition over 16 unnamed but indexed states inside a complex vector
         var superposition = new ComplexVector(
             (from stateIndex in (1 << WorldState.StateSizeInBits).Range()
              let stateForIndex = stateIndex.IndexToWireStates()
@@ -88,26 +75,18 @@ public static class Program {
         return superposition;
     }
     public static ProbabilityDistribution<WorldState> Measure(ComplexVector worldSuperposition) {
-        var possibilitiesForEachStateInOrder =
-            new[] {false, true}
-            .ChooseWithReplacement(numberOfItemsToDraw: 4)
-            .Select(bools => new WorldState(
-                                 new AliceState(bools[3], bools[2]),
-                                 new BobState(bools[1], bools[0])));
-        
-        var measurementProbabilities =
-            possibilitiesForEachStateInOrder
-            .Zip(worldSuperposition.Values, 
-                 (m, v) => m.KeyVal(v.Magnitude*v.Magnitude));
-        
-        return new ProbabilityDistribution<WorldState>(measurementProbabilities);
+        return new ProbabilityDistribution<WorldState>(
+            from stateIndex in (1 << WorldState.StateSizeInBits).Range()
+            let amplitude = worldSuperposition.Values[stateIndex]
+            let probability = Math.Pow(amplitude.Magnitude, 2)
+            let state = stateIndex.IndexToWireStates()
+            select state.KeyVal(probability));
     }
 
     public static void RunTest() {
         var As = new[] { Util.Alice1, Util.Alice2, Util.Alice3 };
         var Bs = new[] { Util.Bob1, Util.Bob2, Util.Bob3 };
         if (As.Concat(Bs).Any(e => !e.IsUnitary())) throw new Exception();
-
 
         var tests = from row in 3.Range()
                     from col in 3.Range()
