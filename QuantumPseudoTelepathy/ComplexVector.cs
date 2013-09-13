@@ -11,9 +11,9 @@ public struct ComplexVector {
     private readonly IReadOnlyList<Complex> _values;
     public IReadOnlyList<Complex> Values { get { return _values ?? ReadOnlyList.Empty<Complex>(); }}
 
-    public ComplexVector(IReadOnlyList<Complex> values) {
+    public ComplexVector(IEnumerable<Complex> values) {
         if (values == null) throw new ArgumentNullException("values");
-        this._values = values;
+        this._values = values.ToArray();
     }
 
     public static ComplexVector operator *(ComplexVector vector, Complex scalar) {
