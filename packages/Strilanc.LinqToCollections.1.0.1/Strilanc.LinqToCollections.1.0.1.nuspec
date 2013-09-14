@@ -19,8 +19,5 @@ For example, the library implements a Select method that ensures the result of '
     <copyright>Public Domain</copyright>
     <language>en-US</language>
     <tags>linq collection list dictionary</tags>
-    <references>
-      <reference file="LinqToCollections.dll" />
-    </references>
   </metadata>
 </package>

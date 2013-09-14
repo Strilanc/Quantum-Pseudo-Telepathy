@@ -20,13 +20,13 @@ public struct ComplexVector {
         return scalar*vector;
     }
     public static ComplexVector operator *(Complex scalar, ComplexVector vector) {
-        return new ComplexVector(vector.Values.Select(e => e*scalar).ToArray());
+        return new ComplexVector(vector.Values.Select(e => e*scalar));
     }
     public static Complex operator *(ComplexVector vector1, ComplexVector vector2) {
         return vector1.Values.Zip(vector2.Values, (e1, e2) => e1 * e2).Sum();
     }
     public static ComplexVector operator +(ComplexVector vector1, ComplexVector vector2) {
-        return new ComplexVector(vector1.Values.Zip(vector2.Values, (e1, e2) => e1 + e2).ToArray());
+        return new ComplexVector(vector1.Values.Zip(vector2.Values, (e1, e2) => e1 + e2));
     }
     public override string ToString() {
         var b = (int)Math.Round(Math.Log(_values.Count, 2));

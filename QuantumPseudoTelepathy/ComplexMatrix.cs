@@ -8,19 +8,14 @@ using Strilanc.LinqToCollections;
 [DebuggerDisplay("{ToString()}")]
 public struct ComplexMatrix {
     private readonly IReadOnlyList<IReadOnlyList<Complex>> _columns;
-    private ComplexMatrix(IReadOnlyList<IReadOnlyList<Complex>> columns) {
+    private ComplexMatrix(IEnumerable<IEnumerable<Complex>> columns) {
         if (columns == null) throw new ArgumentNullException("columns");
-        if (columns.Any(col => col.Count != columns.Count)) throw new ArgumentException("Not square");
-        this._columns = columns;
+        this._columns = columns.Select(e => e.ToArray()).ToArray();
+        //if (_columns.Any(col => col.Count != _columns.Count)) throw new ArgumentException("Not square");
     }
 
     public static ComplexMatrix FromColumns(IEnumerable<IEnumerable<Complex>> columns) {
-        return new ComplexMatrix(columns.Select(e => e.ToArray()).ToArray());
-    }
-    public static ComplexMatrix MakeSinglePhaseInverter(int size, int flippedState) {
-        return FromCellData((from i in size.Range()
-                             from j in size.Range()
-                             select (i == j ? Complex.One : 0)*(i == flippedState ? -1 : 1)).ToArray());
+        return new ComplexMatrix(columns);
     }
     public bool IsIdentity() {
         return Columns.Select((e, i) => e.Select((f, j) => (f - (j == i ? 1 : 0)).Magnitude < 0.0001).All(f => f)).All(e => e);
@@ -32,19 +27,6 @@ public struct ComplexMatrix {
         var size = (int)Math.Sqrt(cells.Length);
         var cols = cells.Deinterleave(size);
         return FromColumns(cols);
-    }
-    public static ComplexMatrix MakeIdentity(int size) {
-        return FromCellData((from i in size.Range()
-                             from j in size.Range()
-                             select i == j ? Complex.One : 0).ToArray());
-    }
-    public static ComplexMatrix MakeHadamard(int power) {
-        if (power == 0) return FromCellData(1);
-        var h = MakeHadamard(power - 1);
-        return FromMatrixData(h, h, h, -h);
-    }
-    public static ComplexMatrix MakeUnitaryHadamard(int power) {
-        return MakeHadamard(power)*Math.Pow(0.5, 0.5*power);
     }
     public static ComplexMatrix FromMatrixData(params ComplexMatrix[] cells) {
         var inSize = cells.First().Span;
@@ -80,7 +62,7 @@ public struct ComplexMatrix {
                             let xr = otherWires.Select((e, i) => row[e] << i).Sum()
                             let xc = otherWires.Select((e, i) => col[e] << i).Sum()
                             select xr == xc ? x.Columns[c][r] : 0;
-        return FromColumns(result.Select(e => e.ToArray()).ToArray());
+        return FromColumns(result);
     }
 
     public ComplexMatrix Dagger() {
@@ -117,14 +99,13 @@ public struct ComplexMatrix {
     public static ComplexVector operator *(ComplexVector vector, ComplexMatrix matrix) {
         return new ComplexVector(
             matrix.Rows
-            .Select(r => new ComplexVector(r) * vector)
-            .ToArray());
+            .Select(r => new ComplexVector(r) * vector));
     }
     public static ComplexMatrix operator -(ComplexMatrix matrix) {
         return matrix * -1;
     }
     public static ComplexMatrix operator *(ComplexMatrix matrix, Complex scale) {
-        return FromColumns(matrix.Columns.Select(e => e.Select(c => c * scale).ToArray()).ToArray());
+        return FromColumns(matrix.Columns.Select(e => e.Select(c => c * scale)));
     }
     public static ComplexMatrix operator *(Complex scale, ComplexMatrix matrix) {
         return matrix*scale;
@@ -137,10 +118,10 @@ public struct ComplexMatrix {
         return !(v1 == v2);
     }
     public static ComplexMatrix operator /(ComplexMatrix matrix, Complex scale) {
-        return FromColumns(matrix.Columns.Select(e => e.Select(c => c / scale).ToArray()).ToArray());
+        return FromColumns(matrix.Columns.Select(e => e.Select(c => c / scale)));
     }
     public static ComplexMatrix operator *(ComplexMatrix left, ComplexMatrix right) {
-        return new ComplexMatrix(left.Columns.Select(c => (new ComplexVector(c) * right).Values).ToArray());
+        return new ComplexMatrix(left.Columns.Select(c => (new ComplexVector(c) * right).Values));
     }
     public override bool Equals(object obj) {
         return obj is ComplexMatrix && (ComplexMatrix)obj == this;
@@ -149,6 +130,6 @@ public struct ComplexMatrix {
         return Columns.SelectMany(e => e).Aggregate(Span.GetHashCode(), (a, e) => a*3 + Math.Round(e.Real*1000).GetHashCode()*5 + Math.Round(e.Imaginary*1000).GetHashCode());
     }
     public override string ToString() {
-        return Rows.Select(r => r.Select(c => "| " + c.ToPrettyString().PadRight(6)).StringJoin("") + " |").StringJoin(Environment.NewLine);
+        return Rows.Select(r => r.Select(c => "| " + c.ToMagPhaseString().PadRight(6)).StringJoin("") + " |").StringJoin(Environment.NewLine);
     }
 }
