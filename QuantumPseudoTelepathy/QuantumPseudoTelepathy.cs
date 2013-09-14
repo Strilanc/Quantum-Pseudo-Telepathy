@@ -28,11 +28,19 @@ public static class QuantumPseudoTelepathy {
     }
 
     public static void RunAndPrintSampleGame(Random rng) {
+        Console.WriteLine("+---------------------------------------------------------------");
         var refRow = rng.Next(3);
         var refCol = rng.Next(3);
-        var result = PlayGame(refRow, refCol).Sample(rng);
+        Console.WriteLine("| Ref picked row = {0}, col = {1}", refRow, refCol);
 
-        Console.WriteLine("Ref picked row = {0}, col = {1}", refRow, refCol);
+        Console.WriteLine("| ");
+        Console.WriteLine("| Ref tells Alice the row and Bob the col.");
+        Console.WriteLine("| They each pick a circuit and their qubits through.");
+        var quantumResult = PlayGame(refRow, refCol);
+
+        Console.WriteLine("| They measure the outputs of their circuits:");
+        var result = quantumResult.Sample(rng);
+        Console.WriteLine("| " + result);
 
         var cells = (from row in 3.Range()
                      select (from col in 3.Range()
@@ -49,14 +57,21 @@ public static class QuantumPseudoTelepathy {
             if (result.Bob.Cells[i]) cells[i][refCol] += "B";
         }
 
-        Console.WriteLine(
+        Console.WriteLine("| ");
+        Console.WriteLine("| Alice independently places {0} tokens", result.Alice.Cells.Count(e => e));
+        Console.WriteLine("| Bob independently places {0} tokens", result.Bob.Cells.Count(e => e));
+        Console.WriteLine("| The result:");
+        Console.WriteLine("| " + 
             cells
             .Select(row => row.Select(cell => cell.PadRight(3)).StringJoin(" |"))
-            .StringJoin(Environment.NewLine + "----+----+----" + Environment.NewLine));
+            .StringJoin(Environment.NewLine + "| ----+----+----" + Environment.NewLine + "| "));
         var win = result.Alice.Cells.Count(e => e)%2 == 0
                   && result.Bob.Cells.Count(e => e)%2 == 0
                   && result.Alice.Cells[refCol] != result.Bob.Cells[refRow];
-        Console.WriteLine(win ? "They Won!" : "They Lose :(");
+        Console.WriteLine("| ");
+        Console.WriteLine("+---------------------------------------------------------------");
+        Console.WriteLine("| " + (win ? "They Won!" : "They Lose :("));
+        Console.WriteLine("+---------------------------------------------------------------");
         Console.WriteLine();
     }
 

@@ -20,6 +20,7 @@ public static class Program {
         Console.WriteLine("- (They can't communicate, but they can have pre-shared entangled qubits.)");
         Console.WriteLine("- Alice and Bob win if their common cell has exactly one token on it");
         Console.WriteLine("- (Without entangled qubits they can't win CONSISTENTLY. Can they do it with???)");
+        Console.WriteLine();
         while (true) {
             Console.WriteLine("Press enter to run a game...");
             Console.ReadLine();
