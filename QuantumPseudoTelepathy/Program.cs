@@ -28,12 +28,12 @@ public static class Program {
     }
 
     private static void FindCircuitsForMatrices() {
-        FindPrintCircuitMatchingMatrix(Gates.Alice2);
-        FindPrintCircuitMatchingMatrix(Gates.Bob3);
-        FindPrintCircuitMatchingMatrix(Gates.Bob2);
-        FindPrintCircuitMatchingMatrix(Gates.Bob1);
         FindPrintCircuitMatchingMatrix(Gates.Alice1);
+        FindPrintCircuitMatchingMatrix(Gates.Alice2);
         FindPrintCircuitMatchingMatrix(Gates.Alice3);
+        FindPrintCircuitMatchingMatrix(Gates.Bob1);
+        FindPrintCircuitMatchingMatrix(Gates.Bob2);
+        FindPrintCircuitMatchingMatrix(Gates.Bob3);
 
         while (true) {
             Console.WriteLine("Done. Hit Enter Twice to Continue.");

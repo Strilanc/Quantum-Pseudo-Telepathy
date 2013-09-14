@@ -39,12 +39,12 @@ public static class Gates {
         1, i, 
         i, 1) / Math.Sqrt(2);
 
-    public static readonly ComplexMatrix ControlledNot = ComplexMatrix.FromCellData(
+    public static readonly ComplexMatrix ControlledNot2When1 = ComplexMatrix.FromCellData(
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 0, 1,
         0, 0, 1, 0);
-    public static readonly ComplexMatrix ControlledNot2 = ComplexMatrix.FromCellData(
+    public static readonly ComplexMatrix ControlledNot1When2 = ComplexMatrix.FromCellData(
         0, 1, 0, 0,
         1, 0, 0, 0,
         0, 0, 1, 0,
@@ -59,6 +59,7 @@ public static class Gates {
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0);
+    public static readonly ComplexMatrix MinusOne = PlusOne.Dagger();
 
     public static readonly ComplexMatrix Phase00 = ComplexMatrix.FromCellData(
         i, 0, 0, 0,
@@ -95,92 +96,91 @@ public static class Gates {
         return gate.TensorSquare();
     }
 
-    //equivalent matrix:
+    //matrix (row phases are arbitrary):
     //| 1        i|
-    //|    i  1   |
+    //|    1  i   |
     //|    1  i   | / sqrt(2)
-    //| i        1|
+    //| 1        i|
     //
     //circuit:
-    //---⊕---⧅---⊕---x---
-    //   |        |    |
-    //---.--------.----x---
-    public static readonly ComplexMatrix Alice1 = ControlledNot 
+    //---.---⧅---.---x---
+    //   |        |   |
+    //---⊕-------⊕---x---
+    public static readonly ComplexMatrix Alice1 = ControlledNot2When1 
                                                 * BeamSplit.OnWire1Of2()
-                                                * ControlledNot
+                                                * ControlledNot2When1
                                                 * Swap;
 
-    //equivalent matrix:
+    //matrix (row phases are arbitrary):
     //| 1  i  i  1|
     //| 1 -i  i -1|
-    //| i -1  1 -i| / 2
-    //| i  1  1  i|
+    //| 1  i -i -1| / 2
+    //| 1 -i -i  1|
     //
     //circuit:
-    //------------.---⧅---
+    //-----------⊕---⧅---
     //            |
-    //---H---⧅---⊕-------
+    //---H---⧅---.-------
     public static readonly ComplexMatrix Alice2 = H.OnWire2Of2() 
                                                 * BeamSplit.OnWire2Of2() 
-                                                * ControlledNot2 
+                                                * ControlledNot1When2 
                                                 * BeamSplit.OnWire1Of2();
 
-    //equivalent matrix:
+    //matrix (row phases are arbitrary):
     //| 1  1  1 -1|
     //| 1  1 -1  1|
     //| 1 -1  1  1| / 2
     //|-1  1  1  1|
     //
     //circuit:
-    //---H---⊕---H---
+    //---H---.---H---
     //       |      
-    //-------.--------
+    //-------⊕-------
     public static readonly ComplexMatrix Alice3 = H.OnWire1Of2()
-                                                * ControlledNot
+                                                * ControlledNot2When1
                                                 * H.OnWire1Of2();
 
-    //equivalent matrix:
+    //matrix (row phases are arbitrary):
     //| 1 -1  i  i|
-    //| i  i  1 -1|
-    //| i  i -1  1| / 2
-    //|-1  1  i  i|
+    //| 1  1 -i  i|
+    //| 1  1  i -i| / 2
+    //| 1 -1 -i -i|
     //
     //circuit:
-    //---⧅---x---⊕---⧅---
-    //        |   |    
-    //--------x---.--------
+    //---⧅---x---.---⧅---
+    //       |   |    
+    //-------x---⊕-------
     public static readonly ComplexMatrix Bob1 = BeamSplit.OnWire1Of2() 
                                               * Swap 
-                                              * ControlledNot 
+                                              * ControlledNot2When1 
                                               * BeamSplit.OnWire1Of2();
 
-    //equivalent matrix:
+    //matrix (row phases are arbitrary):
     //| 1  i -1  i|
-    //| i  1  i -1|
-    //| i -1  i  1| / 2
-    //|-1  i  1  i|
+    //| 1 -i  1  i|
+    //| 1  i  1 -i| / 2
+    //| 1 -i -1 -i|
     //
     //circuit:
-    //--------⊕---⧅---
+    //-------.---⧅---
     //        |
-    //---⧅---.--------
+    //---⧅---⊕--------
     public static readonly ComplexMatrix Bob2 = BeamSplit.OnWire2Of2() 
-                                              * ControlledNot 
+                                              * ControlledNot2When1 
                                               * BeamSplit.OnWire1Of2();
 
-    //equivalent matrix:
-    //|    i -i   |
-    //|    i  i   |
-    //| i       -i| / sqrt(2)
-    //|-i       -i|
+    //matrix (row phases are arbitrary):
+    //|    1 -1   |
+    //|    1  1   |
+    //| 1       -1| / sqrt(2)
+    //| 1        1|
     //
     //circuit:
-    //---Y---|‾‾‾‾|-------
-    //       | +1 |
-    //-------|____|---H---
-    public static readonly ComplexMatrix Bob3 = Y.OnWire1Of2() 
-                                              * PlusOne
-                                              * H.OnWire2Of2();
+    //---|‾‾‾‾|-------
+    //   | -- |
+    //---|____|---√!--
+    public static readonly ComplexMatrix Bob3 = MinusOne 
+                                              * SqrtNot.OnWire2Of2();
 
     // -----------------------------------------------------------
     // ----V---- searching for circuits that match a matrix --V---
@@ -203,10 +203,11 @@ public static class Gates {
                               }
                               select gateOnOneOfTwoWires;
         var twoWireBasicGates = new Dictionary<string, ComplexMatrix> {
-            {"ControlledNot", ControlledNot},
-            {"ControlledNot2", ControlledNot2},
+            {"ControlledNot2When1", ControlledNot2When1},
+            {"ControlledNot1When2", ControlledNot1When2},
             {"Swap", Swap},
             {"PlusOne", PlusOne},
+            {"MinusOne", MinusOne},
             {"Flip00", Flip00},
             {"Flip01", Flip01},
             {"Flip10", Flip10},
