@@ -9,7 +9,7 @@ public static class QuantumPseudoTelepathy {
         // test every possible run of the game, to ensure the strategy wins in every case
         var fails = from refereeRowChoice in 3.Range()
                     from refereeColChoice in 3.Range()
-                    let results = RunGame(refereeRowChoice, refereeColChoice)
+                    let results = PlayGame(refereeRowChoice, refereeColChoice)
                     from outcome in results.Possibilities.Keys
                     let colsOfRow = outcome.Alice.Cells
                     let rowsOfCol = outcome.Bob.Cells
@@ -21,9 +21,45 @@ public static class QuantumPseudoTelepathy {
 
         var fail = fails.FirstOrDefault();
         if (fail != null) throw new InvalidProgramException();
+
+        // if we reach here, then the strategy wins 100% of the time
+        Console.WriteLine("Winning Strategy: Check!");
     }
 
-    public static ProbabilityDistribution<WorldState> RunGame(int refereeRowChoice, int refereeColChoice) {
+    public static void RunAndPrintSampleGame(Random rng) {
+        var refRow = rng.Next(3);
+        var refCol = rng.Next(3);
+        var result = PlayGame(refRow, refCol).Sample(rng);
+
+        Console.WriteLine("Ref picked row = {0}, col = {1}", refRow, refCol);
+
+        var cells = (from row in 3.Range()
+                     select (from col in 3.Range()
+                             let isUnusedCell = row != refRow && col != refCol
+                             let isCommonCell = row == refRow && col == refCol
+                             select isUnusedCell ? " --"
+                                  : isCommonCell ? ">"
+                                  : " "
+                             ).ToArray()
+                     ).ToArray();
+
+        foreach (var i in 3.Range()) {
+            if (result.Alice.Cells[i]) cells[refRow][i] += "A";
+            if (result.Bob.Cells[i]) cells[i][refCol] += "B";
+        }
+
+        Console.WriteLine(
+            cells
+            .Select(row => row.Select(cell => cell.PadRight(3)).StringJoin(" |"))
+            .StringJoin(Environment.NewLine + "----+----+----" + Environment.NewLine));
+        var win = result.Alice.Cells.Count(e => e)%2 == 0
+                  && result.Bob.Cells.Count(e => e)%2 == 0
+                  && result.Alice.Cells[refCol] != result.Bob.Cells[refRow];
+        Console.WriteLine(win ? "They Won!" : "They Lose :(");
+        Console.WriteLine();
+    }
+
+    public static ProbabilityDistribution<WorldState> PlayGame(int refereeRowChoice, int refereeColChoice) {
         // alice and bob each get two entangled qubits (alice's qubit 1 is guaranteed to match bob's qubit 1; same for qubits 2)
         var worldState = PreSharedQubitsSuperposition();
 
