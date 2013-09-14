@@ -49,12 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComplexMatrix.cs" />
-    <Compile Include="ComplexVector.cs" />
-    <Compile Include="QuantumPseudoTelepathy.cs" />
-    <Compile Include="QuantumGates.cs" />
-    <Compile Include="ProbabilityDistribution.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Math\ComplexMatrix.cs" />
+    <Compile Include="Math\ComplexVector.cs" />
+    <Compile Include="Quantum\PseudoTelepathy.cs" />
+    <Compile Include="Quantum\Gates.cs" />
+    <Compile Include="Math\ProbabilityDistribution.cs" />
+    <Compile Include="Math\Util.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

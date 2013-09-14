@@ -3,9 +3,8 @@ using System.Diagnostics;
 using System.Linq;
 
 public static class Program {
-
     public static void Main() {
-        QuantumPseudoTelepathy.CheckAllGameRuns();
+        PseudoTelepathy.CheckAllGameRuns();
 
         //FindCircuitsForMatrices();
 
@@ -24,17 +23,17 @@ public static class Program {
         while (true) {
             Console.WriteLine("Press enter to run a game...");
             Console.ReadLine();
-            QuantumPseudoTelepathy.RunAndPrintSampleGame(rng);
+            PseudoTelepathy.RunAndPrintSampleGame(rng);
         }
     }
 
     private static void FindCircuitsForMatrices() {
-        FindPrintCircuitMatchingMatrix(QuantumGates.Alice2);
-        FindPrintCircuitMatchingMatrix(QuantumGates.Bob3);
-        FindPrintCircuitMatchingMatrix(QuantumGates.Bob2);
-        FindPrintCircuitMatchingMatrix(QuantumGates.Bob1);
-        FindPrintCircuitMatchingMatrix(QuantumGates.Alice1);
-        FindPrintCircuitMatchingMatrix(QuantumGates.Alice3);
+        FindPrintCircuitMatchingMatrix(Gates.Alice2);
+        FindPrintCircuitMatchingMatrix(Gates.Bob3);
+        FindPrintCircuitMatchingMatrix(Gates.Bob2);
+        FindPrintCircuitMatchingMatrix(Gates.Bob1);
+        FindPrintCircuitMatchingMatrix(Gates.Alice1);
+        FindPrintCircuitMatchingMatrix(Gates.Alice3);
 
         while (true) {
             Console.WriteLine("Done. Hit Enter Twice to Continue.");
@@ -53,7 +52,7 @@ public static class Program {
         Console.WriteLine(targetDesc);
         Debug.WriteLine(targetDesc);
 
-        var r = from circuit in QuantumGates.CachedShortCircuitSearch()
+        var r = from circuit in Gates.CachedShortCircuitSearch()
                 where circuit.Value.IsMultiRowPhased(target) // for pseudotelepathy, thw row phases of each matrix don't matter
                 select circuit.Key.StringJoin("*");
         foreach (var c in r.Take(16)) {

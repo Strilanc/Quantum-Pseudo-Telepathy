@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
 
-public static class QuantumGates {
+public static class Gates {
     private static readonly Complex i = Complex.ImaginaryOne;
     public static readonly ComplexMatrix NoGate = ComplexMatrix.FromCellData(
         1, 0,
@@ -85,6 +85,15 @@ public static class QuantumGates {
     public static readonly ComplexMatrix Flip10 = Phase10 * Phase10;
     public static readonly ComplexMatrix Flip11 = Phase11 * Phase11;
 
+    public static ComplexMatrix OnWire1Of2(this ComplexMatrix gate) {
+        return gate.TensorProduct(NoGate);
+    }
+    public static ComplexMatrix OnWire2Of2(this ComplexMatrix gate) {
+        return NoGate.TensorProduct(gate);
+    }
+    public static ComplexMatrix OnBothWires(this ComplexMatrix gate) {
+        return gate.TensorSquare();
+    }
 
     //equivalent matrix:
     //| 1        i|
@@ -215,15 +224,6 @@ public static class QuantumGates {
         return eitherWireGates.Concat(twoWireBasicGates).ToArray();
     }).Invoke();
 
-    public static ComplexMatrix OnWire1Of2(this ComplexMatrix gate) {
-        return gate.TensorProduct(NoGate);
-    }
-    public static ComplexMatrix OnWire2Of2(this ComplexMatrix gate) {
-        return NoGate.TensorProduct(gate);
-    }
-    public static ComplexMatrix OnBothWires(this ComplexMatrix gate) {
-        return gate.TensorSquare();
-    }
     public static IEnumerable<KeyValuePair<ImmutableList<string>, ComplexMatrix>> CircuitSearch(int maxNumberOfGates) {
         var queue = new Queue<Tuple<ImmutableList<string>, int, ComplexMatrix>>(new[] {
             Tuple.Create(ImmutableList<string>.Empty, 0, NoGate.OnBothWires())

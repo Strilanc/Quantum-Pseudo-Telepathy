@@ -5,7 +5,7 @@ using System.Linq;
 using System.Numerics;
 using Strilanc.LinqToCollections;
 
-public static class QuantumPseudoTelepathy {
+public static class PseudoTelepathy {
     public static void CheckAllGameRuns() {
         // test every possible run of the game, to ensure the strategy wins in every case
         var fails = from refereeRowChoice in 3.Range()
@@ -35,7 +35,7 @@ public static class QuantumPseudoTelepathy {
 
         Console.WriteLine("| ");
         Console.WriteLine("| Ref tells Alice the row and Bob the col.");
-        Console.WriteLine("| They each pick a circuit and their qubits through.");
+        Console.WriteLine("| They each pick a circuit and run their qubits through.");
         var quantumResult = PlayGame(refRow, refCol);
 
         Console.WriteLine("| They measure the outputs of their circuits:");
@@ -110,19 +110,19 @@ public static class QuantumPseudoTelepathy {
     }
 
     public static ComplexVector BobRunCircuit(ComplexVector worldSuperposition, int column) {
-        var circuits = new[] { QuantumGates.Bob1, QuantumGates.Bob2, QuantumGates.Bob3 };
+        var circuits = new[] { Gates.Bob1, Gates.Bob2, Gates.Bob3 };
         
         var circuit = circuits[column];
-        var circuitInWorld = QuantumGates.NoGate.TensorSquare().TensorProduct(circuit);
+        var circuitInWorld = Gates.NoGate.TensorSquare().TensorProduct(circuit);
         
         return worldSuperposition * circuitInWorld;
     }
 
     public static ComplexVector AliceRunCircuit(ComplexVector worldSuperposition, int row) {
-        var circuits = new[] { QuantumGates.Alice1, QuantumGates.Alice2, QuantumGates.Alice3 };
+        var circuits = new[] { Gates.Alice1, Gates.Alice2, Gates.Alice3 };
         
         var circuit = circuits[row];
-        var circuitInWorld = circuit.TensorProduct(QuantumGates.NoGate.TensorSquare());
+        var circuitInWorld = circuit.TensorProduct(Gates.NoGate.TensorSquare());
         
         return worldSuperposition * circuitInWorld;
     }
