@@ -8,7 +8,7 @@ using Strilanc.LinqToCollections;
 ///<summary>A list of complex numbers.</summary>
 [DebuggerDisplay("{ToString()}")]
 public struct ComplexVector {
-    private readonly IReadOnlyList<Complex> _values;
+    private readonly Complex[] _values;
     public IReadOnlyList<Complex> Values { get { return _values ?? ReadOnlyList.Empty<Complex>(); }}
 
     public ComplexVector(IEnumerable<Complex> values) {
@@ -29,8 +29,8 @@ public struct ComplexVector {
         return new ComplexVector(vector1.Values.Zip(vector2.Values, (e1, e2) => e1 + e2));
     }
     public override string ToString() {
-        var b = (int)Math.Round(Math.Log(_values.Count, 2));
-        if (_values.Count == 1 << b && b > 2 && _values.Count(e => e != 0) < 20) {
+        var b = (int)Math.Round(Math.Log(_values.Length, 2));
+        if (_values.Length == 1 << b && b > 2 && _values.Count(e => e != 0) < 20) {
             return string.Join(" + ", _values.Zip(new[] { 0, 1 }.ChooseWithReplacement(b), (v, i) => v == 0 ? "" : v.ToPrettyString() + "|" + string.Join("", i.Reverse()) + ">").Where(e => e != ""));
         }
         return String.Format("<{0}>", Values.Select(e => e.ToPrettyString()).StringJoin(", "));

@@ -7,6 +7,8 @@ public static class Program {
     public static void Main() {
         QuantumPseudoTelepathy.CheckAllGameRuns();
 
+        //FindCircuitsForMatrices();
+
         RunAndPrintSampleGamesForever(new Random());
     }
 

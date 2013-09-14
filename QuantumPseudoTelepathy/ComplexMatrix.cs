@@ -7,7 +7,7 @@ using Strilanc.LinqToCollections;
 
 [DebuggerDisplay("{ToString()}")]
 public struct ComplexMatrix {
-    private readonly IReadOnlyList<IReadOnlyList<Complex>> _columns;
+    private readonly Complex[][] _columns;
     private ComplexMatrix(IEnumerable<IEnumerable<Complex>> columns) {
         if (columns == null) throw new ArgumentNullException("columns");
         this._columns = columns.Select(e => e.ToArray()).ToArray();
@@ -68,7 +68,7 @@ public struct ComplexMatrix {
     public ComplexMatrix Dagger() {
         return FromColumns(this.Rows.Select(e => e.Select(x => new Complex(x.Real, -x.Imaginary))));
     }
-    public int Span { get { return _columns == null ? 0 : _columns.Count; } }
+    public int Span { get { return _columns == null ? 0 : _columns.Length; } }
     public IReadOnlyList<IReadOnlyList<Complex>> Columns { get { return _columns ?? ReadOnlyList.Empty<IReadOnlyList<Complex>>(); } }
     public IReadOnlyList<IReadOnlyList<Complex>> Rows {
         get {
