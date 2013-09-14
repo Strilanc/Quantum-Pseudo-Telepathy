@@ -4,6 +4,6 @@
 public class TelepathyTest {
     [TestMethod]
     public void TestTelepathy() {
-        Program.CheckAllGameRuns();
+        QuantumPseudoTelepathy.CheckAllGameRuns();
     }
 }

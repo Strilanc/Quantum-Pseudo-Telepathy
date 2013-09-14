@@ -130,6 +130,6 @@ public struct ComplexMatrix {
         return Columns.SelectMany(e => e).Aggregate(Span.GetHashCode(), (a, e) => a*3 + Math.Round(e.Real*1000).GetHashCode()*5 + Math.Round(e.Imaginary*1000).GetHashCode());
     }
     public override string ToString() {
-        return Rows.Select(r => r.Select(c => "| " + c.ToMagPhaseString().PadRight(6)).StringJoin("") + " |").StringJoin(Environment.NewLine);
+        return Rows.Select(r => r.Select(c => "| " + c.ToPrettyString().PadRight(6)).StringJoin("") + " |").StringJoin(Environment.NewLine);
     }
 }

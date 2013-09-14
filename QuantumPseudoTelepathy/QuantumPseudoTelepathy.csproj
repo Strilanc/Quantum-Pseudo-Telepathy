@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="ComplexMatrix.cs" />
     <Compile Include="ComplexVector.cs" />
+    <Compile Include="QuantumPseudoTelepathy.cs" />
     <Compile Include="QuantumGates.cs" />
     <Compile Include="ProbabilityDistribution.cs" />
     <Compile Include="Util.cs" />
