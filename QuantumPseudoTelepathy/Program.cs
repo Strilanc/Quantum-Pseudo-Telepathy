@@ -28,15 +28,18 @@ public static class Program {
     }
 
     private static void FindCircuitsForMatrices() {
+        FindPrintCircuitMatchingMatrix(QuantumGates.Alice2);
         FindPrintCircuitMatchingMatrix(QuantumGates.Bob3);
         FindPrintCircuitMatchingMatrix(QuantumGates.Bob2);
         FindPrintCircuitMatchingMatrix(QuantumGates.Bob1);
         FindPrintCircuitMatchingMatrix(QuantumGates.Alice1);
-        FindPrintCircuitMatchingMatrix(QuantumGates.Alice2);
         FindPrintCircuitMatchingMatrix(QuantumGates.Alice3);
 
-        while (true)
-            Console.ReadLine();        
+        while (true) {
+            Console.WriteLine("Done. Hit Enter Twice to Continue.");
+            Console.ReadLine();
+            Console.ReadLine();
+        }
     }
 
     private static void FindPrintCircuitMatchingMatrix(ComplexMatrix target) {
@@ -50,9 +53,9 @@ public static class Program {
         Debug.WriteLine(targetDesc);
 
         var r = from circuit in QuantumGates.CachedShortCircuitSearch()
-                where circuit.Value.IsPhased(target)
+                where circuit.Value.IsMultiRowPhased(target) // for pseudotelepathy, thw row phases of each matrix don't matter
                 select circuit.Key.StringJoin("*");
-        foreach (var c in r.Take(4)) {
+        foreach (var c in r.Take(16)) {
             Console.WriteLine(c);
             Debug.WriteLine(c);
         }

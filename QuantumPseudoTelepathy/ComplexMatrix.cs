@@ -80,6 +80,9 @@ public struct ComplexMatrix {
                     col => r[col][row]));
         }
     }
+    public bool IsMultiRowPhased(ComplexMatrix other) {
+        return Rows.Zip(other.Rows, (c1, c2) => new ComplexVector(c1).IsPhased(new ComplexVector(c2))).All(e => e);
+    }
     public bool IsPhased(ComplexMatrix other) {
         var self = this;
         return (from c in self.Span.Range()

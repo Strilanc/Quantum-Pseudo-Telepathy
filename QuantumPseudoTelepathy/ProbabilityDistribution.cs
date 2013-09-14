@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
+[DebuggerDisplay("{ToString()}")]
 public sealed class ProbabilityDistribution<T> {
     public readonly IReadOnlyDictionary<T, double> Possibilities;
     public ProbabilityDistribution(IEnumerable<KeyValuePair<T, double>> possibilities) {
@@ -22,5 +24,18 @@ public sealed class ProbabilityDistribution<T> {
             if (p < 0) return keyValuePair.Key;
         }
         return Possibilities.Last().Key;
+    }
+
+    public override string ToString() {
+        return Possibilities.Select(e => {
+            var percent = e.Value*100;
+            var rounded = (int)Math.Round(percent);
+            var accurate = (percent - rounded).Abs() < 0.0000001;
+            return string.Format(
+                "{0}{1}% {2}",
+                accurate ? "" : "~",
+                rounded,
+                e.Key);
+        }).StringJoin(", ");
     }
 }

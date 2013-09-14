@@ -87,105 +87,91 @@ public static class QuantumGates {
 
 
     //equivalent matrix:
-    //
-    //|-i        1|
+    //| 1        i|
     //|    i  1   |
-    //|    i -1   | / sqrt(2)
-    //| 1       -i|
+    //|    1  i   | / sqrt(2)
+    //| i        1|
     //
     //circuit:
-    //                      ____
-    //--------⊕---H---⊕---|[00>|---
-    //        |        |   | *-i|
-    //---R2---.--------.---|____|---
-    public static readonly ComplexMatrix Alice1 = NoGate.TensorProduct(Phase) 
-                                                * ControlledNot          
-                                                * H.TensorProduct(NoGate)     
-                                                * ControlledNot          
-                                                * Phase00.Dagger();
+    //---⊕---⧅---⊕---x---
+    //   |        |    |
+    //---.--------.----x---
+    public static readonly ComplexMatrix Alice1 = ControlledNot 
+                                                * BeamSplit.OnWire1Of2()
+                                                * ControlledNot
+                                                * Swap;
 
     //equivalent matrix:
-    //
     //| 1  i  i  1|
     //| 1 -i  i -1|
-    //|-1 -i  i  1| / 2
-    //|-1  i  i -1|
+    //| i -1  1 -i| / 2
+    //| i  1  1  i|
     //
     //circuit:
-    //        ____     ____
-    //---X---|[00>|---|[11>|---H---
-    //       | *i |   | *i |
-    //-------|____|---|____|---H---
-    public static readonly ComplexMatrix Alice2 = X.TensorProduct(NoGate) 
-                                                * Phase00 
-                                                * Phase11 
-                                                * H.TensorSquare();
+    //------------.---⧅---
+    //            |
+    //---H---⧅---⊕-------
+    public static readonly ComplexMatrix Alice2 = H.OnWire2Of2() 
+                                                * BeamSplit.OnWire2Of2() 
+                                                * ControlledNot2 
+                                                * BeamSplit.OnWire1Of2();
 
     //equivalent matrix:
-    //
     //| 1  1  1 -1|
     //| 1  1 -1  1|
     //| 1 -1  1  1| / 2
     //|-1  1  1  1|
     //
     //circuit:
-    //
     //---H---⊕---H---
     //       |      
     //-------.--------
-    public static readonly ComplexMatrix Alice3 = H.TensorProduct(NoGate)
+    public static readonly ComplexMatrix Alice3 = H.OnWire1Of2()
                                                 * ControlledNot
-                                                * H.TensorProduct(NoGate);
+                                                * H.OnWire1Of2();
 
     //equivalent matrix:
-    //
     //| 1 -1  i  i|
     //| i  i  1 -1|
-    //| 1  1  i -i| / 2
+    //| i  i -1  1| / 2
     //|-1  1  i  i|
     //
     //circuit:
-    //                    _____
-    //---⧅------⊕---H---|[11>|---
-    //           |       |*-i |
-    //---|1>*i---.-------|____|---
-    public static readonly ComplexMatrix Bob1 = BeamSplit.TensorProduct(Phase) 
-                                              * ControlledNot
-                                              * H.TensorProduct(NoGate)
-                                              * Phase11.Dagger();
-
-    //equivalent matrix:
-    //
-    //| 1  i -1  i|
-    //|-1  i -1 -i|
-    //|-1 -i -1  i| / 2
-    //| 1 -i -1 -i|
-    //
-    //circuit:
-    //
-    //--------⊕---⧅---R2---
-    //        |
-    //---⧅---.--------R2----
-    public static readonly ComplexMatrix Bob2 = NoGate.TensorProduct(BeamSplit) 
+    //---⧅---x---⊕---⧅---
+    //        |   |    
+    //--------x---.--------
+    public static readonly ComplexMatrix Bob1 = BeamSplit.OnWire1Of2() 
+                                              * Swap 
                                               * ControlledNot 
-                                              * BeamSplit.TensorProduct(NoGate) 
-                                              * Phase.TensorSquare();
+                                              * BeamSplit.OnWire1Of2();
 
     //equivalent matrix:
-    //
-    //| 0  1 -1  0|
-    //| 0  1  1  0|
-    //|-1  0  0  1| / sqrt(2)
-    //| 1  0  0  1|
+    //| 1  i -1  i|
+    //| i  1  i -1|
+    //| i -1  i  1| / 2
+    //|-1  i  1  i|
     //
     //circuit:
-    //        ____
-    //---X---|    |--------
+    //--------⊕---⧅---
+    //        |
+    //---⧅---.--------
+    public static readonly ComplexMatrix Bob2 = BeamSplit.OnWire2Of2() 
+                                              * ControlledNot 
+                                              * BeamSplit.OnWire1Of2();
+
+    //equivalent matrix:
+    //|    i -i   |
+    //|    i  i   |
+    //| i       -i| / sqrt(2)
+    //|-i       -i|
+    //
+    //circuit:
+    //---Y---|‾‾‾‾|-------
     //       | +1 |
-    //-------|____|---√!---
-    public static readonly ComplexMatrix Bob3 = X.TensorProduct(NoGate) 
-                                              * PlusOne 
-                                              * NoGate.TensorProduct(SqrtNot);
+    //-------|____|---H---
+    public static readonly ComplexMatrix Bob3 = Y.OnWire1Of2() 
+                                              * PlusOne
+                                              * H.OnWire2Of2();
 
     // -----------------------------------------------------------
     // ----V---- searching for circuits that match a matrix --V---
@@ -203,8 +189,8 @@ public static class QuantumGates {
         };
         var eitherWireGates = from singleWireGate in singleWireBasicGates
                               from gateOnOneOfTwoWires in new[] {
-                                  (singleWireGate.Key + ".TensorProduct(NoGate)").KeyVal(singleWireGate.Value.TensorProduct(NoGate)),
-                                  ("NoGate.TensorProduct(" + singleWireGate.Key + ")").KeyVal(NoGate.TensorProduct(singleWireGate.Value))
+                                  (singleWireGate.Key + ".OnWire1Of2()").KeyVal(singleWireGate.Value.OnWire1Of2()),
+                                  (singleWireGate.Key + ".OnWire2Of2()").KeyVal(singleWireGate.Value.OnWire2Of2())
                               }
                               select gateOnOneOfTwoWires;
         var twoWireBasicGates = new Dictionary<string, ComplexMatrix> {
@@ -229,11 +215,20 @@ public static class QuantumGates {
         return eitherWireGates.Concat(twoWireBasicGates).ToArray();
     }).Invoke();
 
+    public static ComplexMatrix OnWire1Of2(this ComplexMatrix gate) {
+        return gate.TensorProduct(NoGate);
+    }
+    public static ComplexMatrix OnWire2Of2(this ComplexMatrix gate) {
+        return NoGate.TensorProduct(gate);
+    }
+    public static ComplexMatrix OnBothWires(this ComplexMatrix gate) {
+        return gate.TensorSquare();
+    }
     public static IEnumerable<KeyValuePair<ImmutableList<string>, ComplexMatrix>> CircuitSearch(int maxNumberOfGates) {
         var queue = new Queue<Tuple<ImmutableList<string>, int, ComplexMatrix>>(new[] {
-            Tuple.Create(ImmutableList<string>.Empty, 0, NoGate.TensorSquare())
+            Tuple.Create(ImmutableList<string>.Empty, 0, NoGate.OnBothWires())
         });
-        var seen = new HashSet<ComplexMatrix> { NoGate.TensorSquare() };
+        var seen = new HashSet<ComplexMatrix> { NoGate.OnBothWires() };
         while (queue.Count > 0) {
             var head = queue.Dequeue();
             
@@ -251,7 +246,7 @@ public static class QuantumGates {
     }
 
     private static readonly List<KeyValuePair<ImmutableList<string>, ComplexMatrix>> CachedCircuits = new List<KeyValuePair<ImmutableList<string>, ComplexMatrix>>();
-    private static readonly IEnumerator<KeyValuePair<ImmutableList<string>, ComplexMatrix>> CachedCircuitsFeeder = CircuitSearch(5).GetEnumerator();
+    private static readonly IEnumerator<KeyValuePair<ImmutableList<string>, ComplexMatrix>> CachedCircuitsFeeder = CircuitSearch(4).GetEnumerator();
     private static bool _doneFeedingCircuits;
     public static IEnumerable<KeyValuePair<ImmutableList<string>, ComplexMatrix>> CachedShortCircuitSearch() {
         var index = 0;

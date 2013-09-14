@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Strilanc.LinqToCollections;
@@ -120,6 +121,7 @@ public static class QuantumPseudoTelepathy {
             select state.KeyVal(probability));
     }
 
+    [DebuggerDisplay("{ToString()}")]
     public struct WorldState {
         public readonly PlayerState Alice;
         public readonly PlayerState Bob;
@@ -141,8 +143,16 @@ public static class QuantumPseudoTelepathy {
                     wire1: (index & (1 << 1)) != 0,
                     wire2: (index & (1 << 0)) != 0));
         }
+
+        public override string ToString() {
+            return string.Format(
+                "Alice: {0}, Bob: {1}",
+                Alice,
+                Bob);
+        }
     }
 
+    [DebuggerDisplay("{ToString()}")]
     public struct PlayerState {
         public readonly bool Wire1;
         public readonly bool Wire2;
@@ -152,5 +162,11 @@ public static class QuantumPseudoTelepathy {
             Wire2 = wire2;
         }
         public bool[] Cells { get { return new[] { Wire1, Wire2, Wire1 != Wire2 }; } }
+        public override string ToString() {
+            return string.Format(
+                "{0} {1}", 
+                Wire1 ? "On" : "Off", 
+                Wire2 ? "On" : "Off");
+        }
     }
 }

@@ -16,8 +16,19 @@ public struct ComplexVector {
         this._values = values.ToArray();
     }
 
+    public bool IsPhased(ComplexVector other) {
+        var vals = Values;
+        var c = vals.Count.Range().FirstOrDefault(i => vals[i] != 0);
+        if (vals[c] == 0) return other == this;
+        return this * (other.Values[c] / vals[c]) == other;
+    }
     public static ComplexVector operator *(ComplexVector vector, Complex scalar) {
         return scalar*vector;
+    }
+    public ComplexVector TensorProduct(ComplexVector other) {
+        return new ComplexVector(from v1 in this.Values
+                                 from v2 in other.Values
+                                 select v1*v2);
     }
     public static ComplexVector operator *(Complex scalar, ComplexVector vector) {
         return new ComplexVector(vector.Values.Select(e => e*scalar));
@@ -27,6 +38,20 @@ public struct ComplexVector {
     }
     public static ComplexVector operator +(ComplexVector vector1, ComplexVector vector2) {
         return new ComplexVector(vector1.Values.Zip(vector2.Values, (e1, e2) => e1 + e2));
+    }
+    public static bool operator ==(ComplexVector v1, ComplexVector v2) {
+        return v1.Values.Count == v2.Values.Count 
+            && v1.Values.Zip(v2.Values, (e1, e2) => (e1 - e2).Magnitude < 0.00001)
+                        .All(e => e);
+    }
+    public static bool operator !=(ComplexVector v1, ComplexVector v2) {
+        return !(v1 == v2);
+    }
+    public override bool Equals(object obj) {
+        return obj is ComplexVector && (ComplexVector)obj == this;
+    }
+    public override int GetHashCode() {
+        return Values.Aggregate(Values.Count.GetHashCode(), (a, e) => a * 3 + Math.Round(e.Real * 1000).GetHashCode() * 5 + Math.Round(e.Imaginary * 1000).GetHashCode());
     }
     public override string ToString() {
         var b = (int)Math.Round(Math.Log(_values.Length, 2));
