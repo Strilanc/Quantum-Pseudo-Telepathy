@@ -110,19 +110,27 @@ public static class PseudoTelepathy {
     }
 
     public static ComplexVector BobRunCircuit(ComplexVector worldSuperposition, int column) {
-        var circuits = new[] { Gates.Bob1, Gates.Bob2, Gates.Bob3 };
+        var circuits = new[] {
+            PseudoTelepathyCircuits.BobLeftColumn, 
+            PseudoTelepathyCircuits.BobCenterColumn, 
+            PseudoTelepathyCircuits.BobRightColumn
+        };
         
         var circuit = circuits[column];
-        var circuitInWorld = Gates.NoGate.TensorSquare().TensorProduct(circuit);
+        var circuitInWorld = Gates.NoGate.OnBothWires().TensorProduct(circuit);
         
         return worldSuperposition * circuitInWorld;
     }
 
     public static ComplexVector AliceRunCircuit(ComplexVector worldSuperposition, int row) {
-        var circuits = new[] { Gates.Alice1, Gates.Alice2, Gates.Alice3 };
+        var circuits = new[] {
+            PseudoTelepathyCircuits.AliceTopRow, 
+            PseudoTelepathyCircuits.AliceCenterRow, 
+            PseudoTelepathyCircuits.AliceBottomRow
+        };
         
         var circuit = circuits[row];
-        var circuitInWorld = circuit.TensorProduct(Gates.NoGate.TensorSquare());
+        var circuitInWorld = circuit.TensorProduct(Gates.NoGate.OnBothWires());
         
         return worldSuperposition * circuitInWorld;
     }

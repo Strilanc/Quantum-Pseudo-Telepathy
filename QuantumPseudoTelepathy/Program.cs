@@ -28,12 +28,12 @@ public static class Program {
     }
 
     private static void FindCircuitsForMatrices() {
-        FindPrintCircuitMatchingMatrix(Gates.Alice1);
-        FindPrintCircuitMatchingMatrix(Gates.Alice2);
-        FindPrintCircuitMatchingMatrix(Gates.Alice3);
-        FindPrintCircuitMatchingMatrix(Gates.Bob1);
-        FindPrintCircuitMatchingMatrix(Gates.Bob2);
-        FindPrintCircuitMatchingMatrix(Gates.Bob3);
+        FindPrintCircuitMatchingMatrix(PseudoTelepathyCircuits.AliceTopRow);
+        FindPrintCircuitMatchingMatrix(PseudoTelepathyCircuits.AliceCenterRow);
+        FindPrintCircuitMatchingMatrix(PseudoTelepathyCircuits.AliceBottomRow);
+        FindPrintCircuitMatchingMatrix(PseudoTelepathyCircuits.BobLeftColumn);
+        FindPrintCircuitMatchingMatrix(PseudoTelepathyCircuits.BobCenterColumn);
+        FindPrintCircuitMatchingMatrix(PseudoTelepathyCircuits.BobRightColumn);
 
         while (true) {
             Console.WriteLine("Done. Hit Enter Twice to Continue.");
@@ -52,7 +52,7 @@ public static class Program {
         Console.WriteLine(targetDesc);
         Debug.WriteLine(targetDesc);
 
-        var r = from circuit in Gates.CachedShortCircuitSearch()
+        var r = from circuit in Circuits.DistinctCircuitsUpToSize4_Cache()
                 where circuit.Value.IsMultiRowPhased(target) // for pseudotelepathy, thw row phases of each matrix don't matter
                 select circuit.Key.StringJoin("*");
         foreach (var c in r.Take(16)) {
