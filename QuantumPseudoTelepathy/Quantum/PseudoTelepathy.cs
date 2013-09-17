@@ -184,7 +184,7 @@ public static class PseudoTelepathy {
             Wire1 = wire1;
             Wire2 = wire2;
         }
-        public bool[] Cells { get { return new[] { Wire1, Wire2, Wire1 != Wire2 }; } }
+        public bool[] Cells { get { return new[] { Wire1, Wire2, Wire1 ^ Wire2 }; } }
         public override string ToString() {
             return string.Format(
                 "{0} {1}", 
