@@ -1,0 +1,16 @@
+Public Domain
+
+I place no restrictions on the use of code in this repository (Quantum Pseudo-Telepathy).
+
+That means:
+- Attribution not required.
+- Commercial use allowed.
+- Derivative use allowed.
+- Do whatever you want with it.
+
+But note:
+- No guarantees (I did my best to ensure correctness, but I am not infallible.).
+
+If you need a 'real' license for obtuse legal reasons, I would be happy to grant it.
+
+Craig Gidney, 2013
