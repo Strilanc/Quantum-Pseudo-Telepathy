@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using Strilanc.LinqToCollections;
@@ -142,54 +140,5 @@ public static class PseudoTelepathy {
             let probability = Math.Pow(amplitude.Magnitude, 2)
             let state = WorldState.FromStateIndex(stateIndex)
             select state.KeyVal(probability));
-    }
-
-    [DebuggerDisplay("{ToString()}")]
-    public struct WorldState {
-        public readonly PlayerState Alice;
-        public readonly PlayerState Bob;
-        public WorldState(PlayerState alice, PlayerState bob)
-            : this() {
-            this.Alice = alice;
-            this.Bob = bob;
-        }
-
-        public static readonly int StateSizeInBits = 4;
-        public static readonly int StateSizeInPossibilities = 1 << StateSizeInBits;
-        public static readonly IReadOnlyList<int> PossibleStateIndexes = StateSizeInPossibilities.Range();
-        public static WorldState FromStateIndex(int index) {
-            return new WorldState(
-                alice: new PlayerState(
-                    wire1: (index & (1 << 3)) != 0,
-                    wire2: (index & (1 << 2)) != 0),
-                bob: new PlayerState(
-                    wire1: (index & (1 << 1)) != 0,
-                    wire2: (index & (1 << 0)) != 0));
-        }
-
-        public override string ToString() {
-            return string.Format(
-                "Alice: {0}, Bob: {1}",
-                Alice,
-                Bob);
-        }
-    }
-
-    [DebuggerDisplay("{ToString()}")]
-    public struct PlayerState {
-        public readonly bool Wire1;
-        public readonly bool Wire2;
-        public PlayerState(bool wire1, bool wire2)
-            : this() {
-            Wire1 = wire1;
-            Wire2 = wire2;
-        }
-        public bool[] Cells { get { return new[] { Wire1, Wire2, Wire1 ^ Wire2 }; } }
-        public override string ToString() {
-            return string.Format(
-                "{0} {1}", 
-                Wire1 ? "On" : "Off", 
-                Wire2 ? "On" : "Off");
-        }
     }
 }
