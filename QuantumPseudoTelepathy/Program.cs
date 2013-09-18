@@ -54,7 +54,7 @@ public static class Program {
 
         var r = from circuit in Circuits.DistinctCircuitsUpToSize4_Cache()
                 where circuit.Value.IsMultiRowPhased(target) // for pseudotelepathy, thw row phases of each matrix don't matter
-                select circuit.Key.StringJoin("*");
+                select circuit.Key.Select((e,i) => "Gates." + e + (i == 0 ? "" : ")")).StringJoin(".Then(");
         foreach (var c in r.Take(16)) {
             Console.WriteLine(c);
             Debug.WriteLine(c);

@@ -13,6 +13,9 @@ public static class Circuits {
     public static ComplexMatrix OnBothWires(this ComplexMatrix gate) {
         return gate.TensorSquare();
     }
+    public static ComplexMatrix Then(this ComplexMatrix firstGate, ComplexMatrix secondGate) {
+        return secondGate*firstGate;
+    }
 
     private static readonly KeyValuePair<string, ComplexMatrix>[] BasicGatesToSearch = new Func<KeyValuePair<string, ComplexMatrix>[]>(() => {
         var singleWireBasicGates = new Dictionary<string, ComplexMatrix> {
@@ -62,7 +65,7 @@ public static class Circuits {
             var head = queue.Dequeue();
 
             foreach (var nextGate in BasicGatesToSearch) {
-                var f = head.Item3 * nextGate.Value;
+                var f = head.Item3.Then(nextGate.Value);
                 if (seen.Add(f)) {
                     var e = head.Item1.Add(nextGate.Key);
                     if (head.Item2 < maxNumberOfGates - 1) {
