@@ -29,13 +29,13 @@ public static class PseudoTelepathyCircuits {
         BuildFromBasicGates
         ?
             //circuit:
-            //-----------⊕---⧅---
-            //            |
-            //---H---⧅---.-------
-            Gates.H.OnWire2Of2()
-            .Then(Gates.BeamSplit.OnWire2Of2())
+            //---⧅---⊕-------.---
+            //        |       |
+            //-------.---H---⊕---
+            Gates.BeamSplit.OnWire1Of2()
             .Then(Gates.ControlledNot1When2)
-            .Then(Gates.BeamSplit.OnWire1Of2())
+            .Then(Gates.H.OnWire2Of2())
+            .Then(Gates.ControlledNot2When1)
         :
             //matrix (row phases are arbitrary):
             ComplexMatrix.FromCellData(
@@ -105,7 +105,7 @@ public static class PseudoTelepathyCircuits {
             //---|‾‾‾|-------
             //   |DEC|
             //---|___|---√!--
-            Gates.MinusOne
+            Gates.Decrement
             .Then(Gates.SqrtNot.OnWire2Of2())
         :
             //matrix (row phases are arbitrary):

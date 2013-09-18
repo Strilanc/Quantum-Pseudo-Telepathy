@@ -42,21 +42,21 @@ public static class Gates {
         0, 0, 0, 1,
         0, 0, 1, 0);
     public static readonly ComplexMatrix ControlledNot1When2 = ComplexMatrix.FromCellData(
-        0, 1, 0, 0,
         1, 0, 0, 0,
+        0, 0, 0, 1,
         0, 0, 1, 0,
-        0, 0, 0, 1);
+        0, 1, 0, 0);
     public static readonly ComplexMatrix Swap = ComplexMatrix.FromCellData(
         1, 0, 0, 0,
         0, 0, 1, 0,
         0, 1, 0, 0,
         0, 0, 0, 1);
-    public static readonly ComplexMatrix PlusOne = ComplexMatrix.FromCellData(
+    public static readonly ComplexMatrix Increment = ComplexMatrix.FromCellData(
         0, 0, 0, 1,
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0);
-    public static readonly ComplexMatrix MinusOne = PlusOne.Dagger();
+    public static readonly ComplexMatrix Decrement = Increment.Dagger();
 
     public static readonly ComplexMatrix Phase00 = ComplexMatrix.FromCellData(
         i, 0, 0, 0,
