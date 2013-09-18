@@ -32,10 +32,11 @@ public static class PseudoTelepathyCircuits {
             //-----------⊕---⧅---
             //            |
             //---H---⧅---.-------
-            Gates.H.OnWire2Of2() *
-            Gates.BeamSplit.OnWire2Of2() *
-            Gates.ControlledNot1When2 *
-            Gates.BeamSplit.OnWire1Of2()
+            Gates.BeamSplit.OnWire1Of2() * Gates.BeamSplit.OnWire2Of2() * Gates.Flip11
+            //Gates.H.OnWire2Of2() *
+            //Gates.BeamSplit.OnWire2Of2() *
+            //Gates.ControlledNot1When2 *
+            //Gates.BeamSplit.OnWire1Of2()
         :
             //matrix (row phases are arbitrary):
             ComplexMatrix.FromCellData(
@@ -69,10 +70,11 @@ public static class PseudoTelepathyCircuits {
             //---⧅---x---.---⧅---
             //       |   |    
             //-------x---⊕-------
-            Gates.BeamSplit.OnWire1Of2() *
-            Gates.Swap *
-            Gates.ControlledNot2When1 *
-            Gates.BeamSplit.OnWire1Of2()
+            Gates.BeamSplit.OnWire1Of2()*Gates.BeamSplit.OnWire2Of2()*Gates.ControlledNot2When1*Gates.Swap
+            //Gates.BeamSplit.OnWire1Of2() *
+            //Gates.Swap *
+            //Gates.ControlledNot2When1 *
+            //Gates.BeamSplit.OnWire1Of2()
         :
             //matrix (row phases are arbitrary):
             ComplexMatrix.FromCellData(
@@ -88,9 +90,10 @@ public static class PseudoTelepathyCircuits {
             //-------.---⧅---
             //        |
             //---⧅---⊕--------
-            Gates.BeamSplit.OnWire2Of2() *
-            Gates.ControlledNot2When1 *
-            Gates.BeamSplit.OnWire1Of2()
+            Gates.BeamSplit.OnWire1Of2() * Gates.BeamSplit.OnWire2Of2() * Gates.ControlledNot2When1
+            //Gates.BeamSplit.OnWire2Of2() *
+            //Gates.ControlledNot2When1 *
+            //Gates.BeamSplit.OnWire1Of2()
         :
             //matrix (row phases are arbitrary):
             ComplexMatrix.FromCellData(
@@ -106,8 +109,9 @@ public static class PseudoTelepathyCircuits {
             //---|‾‾‾|-------
             //   |DEC|
             //---|___|---√!--
-            Gates.MinusOne *
-            Gates.SqrtNot.OnWire2Of2()
+            Gates.SqrtNot.OnWire2Of2() * Gates.MinusOne
+            //Gates.MinusOne *
+            //Gates.SqrtNot.OnWire2Of2()
         :
             //matrix (row phases are arbitrary):
             ComplexMatrix.FromCellData(

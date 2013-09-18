@@ -23,4 +23,59 @@ public class ComplexMatrixTest {
         Assert.IsTrue(!r3.IsMultiRowPhased(r4));
         Assert.IsTrue(r3.IsMultiRowPhased(r3*i));
     }
+    [TestMethod]
+    public void TestMultiplication() {
+        var M1 = ComplexMatrix.FromCellData(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 0, 1,
+                0, 0, 1, 0);
+        var M2 = ComplexMatrix.FromCellData(
+                1, 0, 0, 0,
+                0, 0, 1, 0,
+                0, 1, 0, 0,
+                0, 0, 0, 1);
+        var M3 = ComplexMatrix.FromCellData(
+                1, 0, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1,
+                0, 1, 0, 0);
+        Assert.AreEqual(M1*M2, M3);
+    }
+    [TestMethod]
+    public void TestVectorMultiplication() {
+        var M1 = ComplexMatrix.FromCellData(
+                10, 11, 12,
+                13, 14, 15,
+                16, 17, 18);
+        var V = new ComplexVector(new Complex[] {-1,2,3});
+        var V2 = new ComplexVector(new Complex[] { 48, 60, 72 });
+        Assert.AreEqual(M1 * V, V2);
+    }
+    [TestMethod]
+    public void TestVectorMultiplication2() {
+        var M1 = ComplexMatrix.FromCellData(
+                10, 11, 12,
+                13, 14, 15,
+                16, 17, 18);
+        var V = new ComplexVector(new Complex[] { -1, 2, 3 });
+        var V2 = new ComplexVector(new Complex[] { 64, 68, 72 });
+        Assert.AreEqual(V * M1, V2);
+    }
+    [TestMethod]
+    public void TestMultiplication2() {
+        var M1 = ComplexMatrix.FromCellData(
+                -1, 2, 3,
+                4, 5, 6,
+                7, 8, 9);
+        var M2 = ComplexMatrix.FromCellData(
+                10, 11, 12,
+                13, 14, 15,
+                16, 17, 18);
+        var M3 = ComplexMatrix.FromCellData(
+                64, 68, 72,
+                201, 216, 231,
+                318, 342, 366);
+        Assert.AreEqual(M1 * M2, M3);
+    }
 }

@@ -99,9 +99,14 @@ public struct ComplexMatrix {
     public bool IsSimple() {
         return Columns.All(e => e.Count(c => c != 0) == 1);
     }
-    public static ComplexVector operator *(ComplexVector vector, ComplexMatrix matrix) {
+    public static ComplexVector operator *(ComplexMatrix matrix, ComplexVector vector) {
         return new ComplexVector(
             matrix.Rows
+            .Select(r => new ComplexVector(r) * vector));
+    }
+    public static ComplexVector operator *(ComplexVector vector, ComplexMatrix matrix) {
+        return new ComplexVector(
+            matrix.Columns
             .Select(r => new ComplexVector(r) * vector));
     }
     public static ComplexMatrix operator -(ComplexMatrix matrix) {
@@ -124,7 +129,11 @@ public struct ComplexMatrix {
         return FromColumns(matrix.Columns.Select(e => e.Select(c => c / scale)));
     }
     public static ComplexMatrix operator *(ComplexMatrix left, ComplexMatrix right) {
-        return new ComplexMatrix(left.Columns.Select(c => (new ComplexVector(c) * right).Values));
+        if (left.Span != right.Span) throw new ArgumentOutOfRangeException();
+        return FromColumns(
+            from c in right.Columns
+            select from r in left.Rows
+                   select new ComplexVector(r)*new ComplexVector(c));
     }
     public override bool Equals(object obj) {
         return obj is ComplexMatrix && (ComplexMatrix)obj == this;

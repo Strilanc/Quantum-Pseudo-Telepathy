@@ -116,8 +116,8 @@ public static class PseudoTelepathy {
         
         var circuit = circuits[column];
         var circuitInWorld = Gates.NoGate.OnBothWires().TensorProduct(circuit);
-        
-        return worldSuperposition * circuitInWorld;
+
+        return circuitInWorld * worldSuperposition;
     }
 
     public static ComplexVector AliceRunCircuit(ComplexVector worldSuperposition, int row) {
@@ -129,8 +129,8 @@ public static class PseudoTelepathy {
         
         var circuit = circuits[row];
         var circuitInWorld = circuit.TensorProduct(Gates.NoGate.OnBothWires());
-        
-        return worldSuperposition * circuitInWorld;
+
+        return circuitInWorld * worldSuperposition;
     }
 
     public static ProbabilityDistribution<WorldState> Measure(ComplexVector worldSuperposition) {
