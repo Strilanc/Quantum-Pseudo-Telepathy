@@ -7,10 +7,10 @@ public class ComplexMatrixTest {
     [TestMethod]
     public void TestIsMultiPhase() {
         var i = Complex.ImaginaryOne;
-        var r1 = ComplexMatrix.FromCellData(1, 0, 0, 1);
-        var r2 = ComplexMatrix.FromCellData(i, 0, 0, 1);
-        var r3 = ComplexMatrix.FromCellData(0, 1, 1, 0);
-        var r4 = ComplexMatrix.FromCellData(1, 1, 1, -1)/Math.Sqrt(2);
+        var r1 = ComplexMatrix.FromSquareData(1, 0, 0, 1);
+        var r2 = ComplexMatrix.FromSquareData(i, 0, 0, 1);
+        var r3 = ComplexMatrix.FromSquareData(0, 1, 1, 0);
+        var r4 = ComplexMatrix.FromSquareData(1, 1, 1, -1)/Math.Sqrt(2);
 
         Assert.IsTrue(r1.IsMultiRowPhased(r1));
         Assert.IsTrue(r1.IsMultiRowPhased(r2));
@@ -25,17 +25,17 @@ public class ComplexMatrixTest {
     }
     [TestMethod]
     public void TestMultiplication() {
-        var M1 = ComplexMatrix.FromCellData(
+        var M1 = ComplexMatrix.FromSquareData(
                 1, 0, 0, 0,
                 0, 1, 0, 0,
                 0, 0, 0, 1,
                 0, 0, 1, 0);
-        var M2 = ComplexMatrix.FromCellData(
+        var M2 = ComplexMatrix.FromSquareData(
                 1, 0, 0, 0,
                 0, 0, 1, 0,
                 0, 1, 0, 0,
                 0, 0, 0, 1);
-        var M3 = ComplexMatrix.FromCellData(
+        var M3 = ComplexMatrix.FromSquareData(
                 1, 0, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1,
@@ -44,7 +44,7 @@ public class ComplexMatrixTest {
     }
     [TestMethod]
     public void TestVectorMultiplication() {
-        var M1 = ComplexMatrix.FromCellData(
+        var M1 = ComplexMatrix.FromSquareData(
                 10, 11, 12,
                 13, 14, 15,
                 16, 17, 18);
@@ -54,7 +54,7 @@ public class ComplexMatrixTest {
     }
     [TestMethod]
     public void TestVectorMultiplication2() {
-        var M1 = ComplexMatrix.FromCellData(
+        var M1 = ComplexMatrix.FromSquareData(
                 10, 11, 12,
                 13, 14, 15,
                 16, 17, 18);
@@ -64,15 +64,15 @@ public class ComplexMatrixTest {
     }
     [TestMethod]
     public void TestMultiplication2() {
-        var M1 = ComplexMatrix.FromCellData(
+        var M1 = ComplexMatrix.FromSquareData(
                 -1, 2, 3,
                 4, 5, 6,
                 7, 8, 9);
-        var M2 = ComplexMatrix.FromCellData(
+        var M2 = ComplexMatrix.FromSquareData(
                 10, 11, 12,
                 13, 14, 15,
                 16, 17, 18);
-        var M3 = ComplexMatrix.FromCellData(
+        var M3 = ComplexMatrix.FromSquareData(
                 64, 68, 72,
                 201, 216, 231,
                 318, 342, 366);

@@ -18,7 +18,7 @@ public static class PseudoTelepathyCircuits {
             .Then(Gates.Swap)
         :
             //matrix (row phases are arbitrary):
-            ComplexMatrix.FromCellData(
+            ComplexMatrix.FromSquareData(
                 1, 0, 0, i,
                 0, 1,-i, 0,
                 0,-i, 1, 0,
@@ -37,7 +37,7 @@ public static class PseudoTelepathyCircuits {
             .Then(Gates.ControlledNot2When1)
         :
             //matrix (row phases are arbitrary):
-            ComplexMatrix.FromCellData(
+            ComplexMatrix.FromSquareData(
                 1, i, i, 1,
                 1,-i, i,-1,
                 1, i,-i,-1,
@@ -55,7 +55,7 @@ public static class PseudoTelepathyCircuits {
             .Then(Gates.H.OnWire1Of2())
         :
             //matrix (row phases are arbitrary):
-            ComplexMatrix.FromCellData(
+            ComplexMatrix.FromSquareData(
                 1, 1, 1,-1,
                 1, 1,-1, 1,
                 1,-1, 1, 1,
@@ -73,7 +73,7 @@ public static class PseudoTelepathyCircuits {
             .Then(Gates.Swap)
         :
             //matrix (row phases are arbitrary):
-            ComplexMatrix.FromCellData(
+            ComplexMatrix.FromSquareData(
                 1,-1, i, i,
                 1, 1,-i, i,
                 1, 1, i,-i,
@@ -91,7 +91,7 @@ public static class PseudoTelepathyCircuits {
             .Then(Gates.BeamSplit.OnWire1Of2())
         :
             //matrix (row phases are arbitrary):
-            ComplexMatrix.FromCellData(
+            ComplexMatrix.FromSquareData(
                 1, i,-1, i,
                 1,-i, 1, i,
                 1, i, 1,-i,
@@ -108,7 +108,7 @@ public static class PseudoTelepathyCircuits {
             .Then(Gates.SqrtNot.OnWire2Of2())
         :
             //matrix (row phases are arbitrary):
-            ComplexMatrix.FromCellData(
+            ComplexMatrix.FromSquareData(
                 0, 1,-1, 0,
                 0, 1, 1, 0,
                 1, 0, 0,-1,
