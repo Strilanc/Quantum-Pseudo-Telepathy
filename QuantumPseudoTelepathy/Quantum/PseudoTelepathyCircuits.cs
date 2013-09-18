@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Numerics;
 
 public static class PseudoTelepathyCircuits {
@@ -66,12 +65,12 @@ public static class PseudoTelepathyCircuits {
         BuildFromBasicGates
         ?
             //circuit:
-            //---x---.---⧅---
-            //   |   |    
-            //---x---⊕---⧅---
-            Gates.Swap
-            .Then(Gates.ControlledNot2When1)
+            //---.---⧅---x---
+            //   |        |   
+            //---⊕---⧅---x---
+            Gates.ControlledNot1When2
             .Then(Gates.BeamSplit.OnBothWires())
+            .Then(Gates.Swap)
         :
             //matrix (row phases are arbitrary):
             ComplexMatrix.FromCellData(
