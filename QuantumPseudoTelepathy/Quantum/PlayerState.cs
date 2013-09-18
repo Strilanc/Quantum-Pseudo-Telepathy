@@ -4,8 +4,7 @@
 public struct PlayerState {
     public readonly bool Wire1;
     public readonly bool Wire2;
-    public PlayerState(bool wire1, bool wire2)
-        : this() {
+    public PlayerState(bool wire1, bool wire2) {
         Wire1 = wire1;
         Wire2 = wire2;
     }

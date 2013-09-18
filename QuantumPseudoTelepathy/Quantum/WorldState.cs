@@ -6,8 +6,7 @@ using Strilanc.LinqToCollections;
 public struct WorldState {
     public readonly PlayerState Alice;
     public readonly PlayerState Bob;
-    public WorldState(PlayerState alice, PlayerState bob)
-        : this() {
+    public WorldState(PlayerState alice, PlayerState bob) {
         this.Alice = alice;
         this.Bob = bob;
     }
