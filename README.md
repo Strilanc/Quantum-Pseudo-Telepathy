@@ -13,13 +13,13 @@ Win/Lose/Fail-to-follow-rules outcomes of the coordination game being played:
 
 Circuits used for each row and column:
 
-![Board Layout](http://i.imgur.com/Eg8WUQS.png)
+![Board Layout](http://i.imgur.com/Tdjxon6.png)
 
 Gates used by circuits:
 
 ![1-wire gates](http://i.imgur.com/qOYUp3y.png)
 
-![2-wire gates](http://i.imgur.com/8afSNv2.png)
+![2-wire gates](http://i.imgur.com/rfOfthU.png)
 
 ![Entangler](http://i.imgur.com/AoMx3wQ.png)
 
